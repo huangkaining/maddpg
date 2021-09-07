@@ -250,6 +250,18 @@ def make_circle(radius=10, res=30, filled=True):
     else:
         return PolyLine(points, True)
 
+def make_rectangle(height=5, width=10, filled=True):
+    points = []
+    points.append((-width / 2, -height / 2))
+    points.append((width / 2, -height / 2))
+    points.append((width / 2, height / 2))
+    points.append((-width / 2, height / 2))
+    if filled:
+        return FilledPolygon(points)
+    else:
+        return PolyLine(points,True)
+
+
 def make_polygon(v, filled=True):
     if filled: return FilledPolygon(v)
     else: return PolyLine(v, True)

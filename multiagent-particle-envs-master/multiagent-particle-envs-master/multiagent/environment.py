@@ -115,6 +115,7 @@ class MultiAgentEnv(gym.Env):
             obs_n.append(self._get_obs(agent))
         return obs_n
 
+
     # get info used for benchmarking
     def _get_info(self, agent):
         if self.info_callback is None:
@@ -228,7 +229,10 @@ class MultiAgentEnv(gym.Env):
             self.render_geoms = []
             self.render_geoms_xform = []
             for entity in self.world.entities:
-                geom = rendering.make_circle(entity.size)
+                if entity.movable:
+                    geom = rendering.make_rectangle(0.5 * entity.size, entity.size)
+                else:
+                    geom = rendering.make_circle(entity.size)
                 xform = rendering.Transform()
                 if 'agent' in entity.name:
                     geom.set_color(*entity.color, alpha=0.5)
@@ -257,6 +261,11 @@ class MultiAgentEnv(gym.Env):
             # update geometry positions
             for e, entity in enumerate(self.world.entities):
                 self.render_geoms_xform[e].set_translation(*entity.state.p_pos)
+                if entity.movable:
+                    #print(np.arctan(np.array(*entity.state.p_vel)))
+                    ang = np.arctan(np.array(*entity.state.p_vel)) + 1.5707
+                    print(ang*57.29577951308232)
+                    self.render_geoms_xform[e].set_rotation(ang)
             # render to display or array
             results.append(self.viewers[i].render(return_rgb_array = mode=='rgb_array'))
 

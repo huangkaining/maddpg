@@ -26,9 +26,13 @@ def make_update_exp(vals, target_vals):
     expression = tf.group(*expression)
     return U.function([], [], updates=[expression])
 
+
+#ptrain是用来训练policy网络的，创建placeholder，构造静态图，p_index,p_func指的是policy的第几个智能体和policy的函数
+# ，q-func是q值的函数
+# 连续动作空间的时候actor输出维度2*action_space，是μ和σ
 def p_train(make_obs_ph_n, act_space_n, p_index, p_func, q_func, optimizer, grad_norm_clipping=None, local_q_func=False, num_units=64, scope="trainer", reuse=None):
     with tf.variable_scope(scope, reuse=reuse):
-        # create distribtuions
+        # create distribtuions，设定动作的概率分布
         act_pdtype_n = [make_pdtype(act_space) for act_space in act_space_n]
 
         # set up placeholders
@@ -73,6 +77,8 @@ def p_train(make_obs_ph_n, act_space_n, p_index, p_func, q_func, optimizer, grad
 
         return act, train, update_target_p, {'p_values': p_values, 'target_act': target_act}
 
+
+#q值的神经网络，输出是Q值
 def q_train(make_obs_ph_n, act_space_n, q_index, q_func, optimizer, grad_norm_clipping=None, local_q_func=False, scope="trainer", reuse=None, num_units=64):
     with tf.variable_scope(scope, reuse=reuse):
         # create distribtuions
@@ -179,6 +185,10 @@ class MADDPGAgentTrainer(AgentTrainer):
         obs, act, rew, obs_next, done = self.replay_buffer.sample_index(index)
 
         # train q network
+        #用qtrain计算q的输出，用来求targetq
+        #用targetq求q网络的loss
+        #计算policy的loss
+        #更新target policy和target q的参数
         num_sample = 1
         target_q = 0.0
         for i in range(num_sample):
