@@ -1,6 +1,2 @@
-model_checkpoint_path: "09061-12800"
-all_model_checkpoint_paths: "09061-12400"
-all_model_checkpoint_paths: "09061-12500"
-all_model_checkpoint_paths: "09061-12600"
-all_model_checkpoint_paths: "09061-12700"
-all_model_checkpoint_paths: "09061-12800"
+model_checkpoint_path: "09081-100"
+all_model_checkpoint_paths: "09081-100"
