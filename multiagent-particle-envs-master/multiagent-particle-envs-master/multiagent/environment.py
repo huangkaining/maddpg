@@ -230,7 +230,8 @@ class MultiAgentEnv(gym.Env):
             self.render_geoms_xform = []
             for entity in self.world.entities:
                 if entity.movable:
-                    geom = rendering.make_rectangle(0.5 * entity.size, entity.size)
+                    #geom = rendering.make_rectangle(0.5 * entity.size, entity.size)
+                    geom = rendering.make_triangle(0.5 * entity.size, entity.size)
                 else:
                     geom = rendering.make_circle(entity.size)
                 xform = rendering.Transform()
@@ -262,9 +263,17 @@ class MultiAgentEnv(gym.Env):
             for e, entity in enumerate(self.world.entities):
                 self.render_geoms_xform[e].set_translation(*entity.state.p_pos)
                 if entity.movable:
-                    #print(np.arctan(np.array(*entity.state.p_vel)))
-                    ang = np.arctan(np.array(*entity.state.p_vel)) + 1.5707
-                    print(ang*57.29577951308232)
+                    #print(*entity.state.p_vel)
+                    '''if entity.state.p_vel[0] == 0:
+                        if entity.state.p_vel[1] <0 :
+                            ang = 4.712
+                        else:
+                            ang = 1.571
+                    else:
+                        ang = np.arctan(1.0 * entity.state.p_vel[1] / entity.state.p_vel[0])'''
+                    ang = np.arctan2(entity.state.p_vel[1],entity.state.p_vel[0])
+                    print("agent{}:pos:{}   vel:{}  angle:{}".format(e,entity.state.p_pos \
+                            ,entity.state.p_vel,ang*57.29))
                     self.render_geoms_xform[e].set_rotation(ang)
             # render to display or array
             results.append(self.viewers[i].render(return_rgb_array = mode=='rgb_array'))

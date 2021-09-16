@@ -261,6 +261,15 @@ def make_rectangle(height=5, width=10, filled=True):
     else:
         return PolyLine(points,True)
 
+def make_triangle(height=5, width = 10, filled = True):
+    points = []
+    points.append((-width / 2, -height / 2))
+    points.append((-width / 2, height / 2))
+    points.append((width / 2, 0))
+    if filled:
+        return FilledPolygon(points)
+    else:
+        return PolyLine(points,True)
 
 def make_polygon(v, filled=True):
     if filled: return FilledPolygon(v)
