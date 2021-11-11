@@ -33,13 +33,14 @@ def parse_args():
     parser.add_argument("--num_units_1", type=int, default=128, help="number of units in the mlp")
     parser.add_argument("--num_units_2", type=int, default=64, help="number of units in the mlp")
     parser.add_argument("--num_units_openai", type=int, default=64, help="number of units in the mlp")
+    parser.add_argument("--use_done",action="store_true",default=False)
 
     # checkpointing
     parser.add_argument("--fre4save_model", type=int, default=400, help="the number of the episode for saving the model")
     parser.add_argument("--start_save_model", type=int, default=400, help="the number of the episode for saving the model")
     parser.add_argument("--save_dir", type=str, default="./models-pytorch", \
             help="directory in which training state and model should be saved")
-    parser.add_argument("--old_model_name", type=str, default="models/simple_world_comm_missile_2111_040951_380000/", \
+    parser.add_argument("--old_model_name", type=str, default="models-pytorch/simple_world_comm_missile_2111_102240_220000/", \
             help="directory in which training state and model are loaded")
 
     # evaluation

@@ -27,7 +27,10 @@ def make_env(scenario_name, arglist, benchmark=False):
     if benchmark:
         env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, scenario.benchmark_data)
     else:
-        env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation)
+        if scenario.done and arglist.use_done:
+            env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation, done_callback=scenario.done)
+        else:
+            env = MultiAgentEnv(world, scenario.reset_world, scenario.reward, scenario.observation)
     return env
 
 def get_trainers(env, num_adversaries, obs_shape_n, action_shape_n, arglist):
@@ -182,6 +185,7 @@ def train(arglist):
     episode_cnt = 0
     update_cnt = 0
     t_start = time.time()
+    episode_len = 0
     rew_n_old = [0.0 for _ in range(env.n)] # set the init reward
     agent_info = [[[]]] # placeholder for benchmarking info
     episode_rewards = [0.0] # sum of rewards for all agents
@@ -203,8 +207,10 @@ def train(arglist):
 
     for episode_gone in range(arglist.max_episode):
         #print("episode_gone:{}".format(episode_gone),end='\n')
+        episode_len = 0
         for episode_cnt in range(arglist.per_episode_max_len):
             #if episode_cnt%10==0: print("episode_cnt:{}".format(episode_cnt))
+            episode_len += 1
             # get action
             action_n = [agent(torch.from_numpy(obs).to(arglist.device, torch.float)).detach().cpu().numpy() \
                 for agent, obs in zip(actors_cur, obs_n)]
@@ -241,7 +247,7 @@ def train(arglist):
                     print(" "*43 + 'episode reward:{} agents mean reward:{}'.format(mean_ep_r, mean_agents_r), end='\r')
                 print('=Training: steps:{} episode:{}'.format(game_step, episode_gone), end='\r')'''
         if episode_gone > 1 and episode_gone % 100 == 0:
-            print("=Training=episode:{} reward:{}".format(episode_gone,\
+            print("=Training=episode:{} average reward:{}".format(episode_gone,\
                   np.mean(episode_rewards[-100:])), end="\n")
 
 

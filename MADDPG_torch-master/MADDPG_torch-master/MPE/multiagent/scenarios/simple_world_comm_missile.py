@@ -139,6 +139,13 @@ class Scenario(BaseScenario):
         dist_min = agent1.size + agent2.size
         return True if dist < dist_min else False
 
+    def near_collision(self, agent1, agent2):
+        #快要接近的时候，获得奖励
+        delta_pos = agent1.state.p_pos - agent2.state.p_pos
+        dist = np.sqrt(np.sum(np.square(delta_pos)))
+        dist_min = agent1.size + agent2.size
+        return True if dist < dist_min * 1.2 else False
+
 
     # return all agents that are not adversaries
     def good_agents(self, world):
@@ -324,3 +331,20 @@ class Scenario(BaseScenario):
         len_vel = np.sqrt(np.dot(vec_vel , vec_vel))
         cos_angle = np.dot(vec_target , vec_vel) / (len_target * len_vel)
         return np.arccos(cos_angle) * 57.29
+
+    def done(self,agent,world):
+        agents = self.good_agents(world)
+        adversaries = self.adversaries(world)
+        if agent.collide:
+            if agent.adversary:
+                for ag in agents:
+                    if self.is_collision(agent,ag):
+                        return True
+            else:
+                for food in world.food:
+                    if self.is_collision(agent,food):
+                        return True
+        return False
+
+
+                
