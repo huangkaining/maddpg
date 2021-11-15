@@ -18,6 +18,7 @@ def parse_args():
     parser.add_argument("--per_episode_max_len", type=int, default=60, help="maximum episode length")
     parser.add_argument("--max_episode", type=int, default=150000, help="maximum episode length")
     parser.add_argument("--num-adversaries", type=int, default=1, help="number of adversaries")
+    parser.add_argument("--exp_name",type=str,default="1")
 
     # core training parameters
     parser.add_argument("--device", default=device, help="torch device ")
@@ -40,7 +41,7 @@ def parse_args():
     parser.add_argument("--start_save_model", type=int, default=400, help="the number of the episode for saving the model")
     parser.add_argument("--save_dir", type=str, default="./models-pytorch", \
             help="directory in which training state and model should be saved")
-    parser.add_argument("--old_model_name", type=str, default="models-pytorch/simple_world_comm_missile_2111_102240_220000/", \
+    parser.add_argument("--old_model_name", type=str, default="models-pytorch/simple_world_comm_missile_21_1115_1/380000/", \
             help="directory in which training state and model are loaded")
 
     # evaluation

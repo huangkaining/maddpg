@@ -11,6 +11,7 @@ import argparse
 import numpy as np
 import torch.nn as nn
 import torch.optim as optim
+import json
 
 from arguments import parse_args
 from replay_buffer import ReplayBuffer
@@ -136,10 +137,11 @@ def agents_train(arglist, game_step, update_cnt, memory, obs_size, action_size, 
 
         # save the model to the path_dir ---cnt by update number
         if update_cnt > arglist.start_save_model and update_cnt % arglist.fre4save_model == 0:
-            time_now = time.strftime('%y%m_%d%H%M')
+            time_now = time.strftime('%y_%m%d')
             print('=time:{} step:{}'.format(time_now, game_step))
             model_file_dir = os.path.join(arglist.save_dir, '{}_{}_{}'.format( \
-                arglist.scenario_name, time_now, game_step))
+                arglist.scenario_name, time_now, arglist.exp_name),'{}'.format(\
+                game_step))
             if not os.path.exists(model_file_dir): # make the path
                 os.mkdir(model_file_dir)
             for agent_idx, (a_c, a_t, c_c, c_t) in \
@@ -165,6 +167,12 @@ def train(arglist):
     print('=============================')
     print('=1 Env {} is right ...'.format(arglist.scenario_name))
     print('=============================')
+    time_now = time.strftime('%y_%m%d')
+    model_file_dir = os.path.join(arglist.save_dir, '{}_{}_{}'.format( \
+        arglist.scenario_name, time_now, arglist.exp_name))
+    if not os.path.exists(model_file_dir):  # make the path
+        os.mkdir(model_file_dir)
+    learning_curve_file = os.path.join(model_file_dir,'data.txt')
 
     """step2: create agents"""
     obs_shape_n = [env.observation_space[i].shape[0] for i in range(env.n)]
@@ -249,6 +257,16 @@ def train(arglist):
         if episode_gone > 1 and episode_gone % 100 == 0:
             print("=Training=episode:{} average reward:{}".format(episode_gone,\
                   np.mean(episode_rewards[-100:])), end="\n")
+            save_data = {}
+            save_data['episode_gone'] = episode_gone
+            save_data['episode_rewards'] = episode_rewards[-100:]
+            for i in range(len(agent_rewards)):
+                save_data[str(i)] = agent_rewards[i][-100:]
+            with open(learning_curve_file,'a') as f:
+                ss = json.dumps(save_data)
+                f.write(ss + "\n")
+
+
 
 
 if __name__ == '__main__':

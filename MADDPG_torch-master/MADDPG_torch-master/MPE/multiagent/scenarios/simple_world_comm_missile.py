@@ -137,7 +137,7 @@ class Scenario(BaseScenario):
         delta_pos = agent1.state.p_pos - agent2.state.p_pos
         dist = np.sqrt(np.sum(np.square(delta_pos)))
         dist_min = agent1.size + agent2.size
-        return True if dist < dist_min else False
+        return True if dist < dist_min * 1.5 else False
 
     def near_collision(self, agent1, agent2):
         #快要接近的时候，获得奖励
@@ -181,7 +181,7 @@ class Scenario(BaseScenario):
         if agent.collide:
             for a in adversaries:
                 if self.is_collision(a, agent):
-                    rew -= 10
+                    rew -= 20
         def bound(x):
             if x < 0.9:
                 return 0
@@ -195,7 +195,7 @@ class Scenario(BaseScenario):
 
         for food in world.food:
             if self.is_collision(agent, food):
-                rew += 10
+                rew += 15
         rew += 0.5 * min([np.sqrt(np.sum(np.square(food.state.p_pos - agent.state.p_pos))) for food in world.food])
         #rew += 0.05 * min([np.sqrt(np.sum(np.square(food.state.p_pos - agent.state.p_pos))) for food in world.food])
 
@@ -217,7 +217,7 @@ class Scenario(BaseScenario):
             for ag in agents:
                 for adv in adversaries:
                     if self.is_collision(ag, adv):
-                        rew += 20
+                        rew += 25
         '''for adv in adversaries:
             rew -= max([round((angle_max - abs(self.visual_angle(adv,ag))) / angle_max) for ag in agents])'''
         return rew
@@ -336,11 +336,7 @@ class Scenario(BaseScenario):
         agents = self.good_agents(world)
         adversaries = self.adversaries(world)
         if agent.collide:
-            if agent.adversary:
-                for ag in agents:
-                    if self.is_collision(agent,ag):
-                        return True
-            else:
+            if not agent.adversary:
                 for food in world.food:
                     if self.is_collision(agent,food):
                         return True
