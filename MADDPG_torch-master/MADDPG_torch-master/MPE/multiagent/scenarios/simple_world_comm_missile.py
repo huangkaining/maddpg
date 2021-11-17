@@ -181,13 +181,14 @@ class Scenario(BaseScenario):
         if agent.collide:
             for a in adversaries:
                 if self.is_collision(a, agent):
-                    rew -= 20
+                    rew -= 30
         def bound(x):
             if x < 0.9:
                 return 0
             if x < 1.0:
                 return (x - 0.9) * 10
-            return min(np.exp(2 * x - 2), 10)  # 1 + (x - 1) * (x - 1)
+            #return min(np.exp(2 * x - 2), 10)  # 1 + (x - 1) * (x - 1)
+            return min(np.exp(5 * x - 5), 10)
 
         for p in range(world.dim_p):
             x = abs(agent.state.p_pos[p])
@@ -195,8 +196,8 @@ class Scenario(BaseScenario):
 
         for food in world.food:
             if self.is_collision(agent, food):
-                rew += 15
-        rew += 0.5 * min([np.sqrt(np.sum(np.square(food.state.p_pos - agent.state.p_pos))) for food in world.food])
+                rew += 25
+        rew += 0.05 * min([np.sqrt(np.sum(np.square(food.state.p_pos - agent.state.p_pos))) for food in world.food])
         #rew += 0.05 * min([np.sqrt(np.sum(np.square(food.state.p_pos - agent.state.p_pos))) for food in world.food])
 
         return rew
@@ -211,13 +212,13 @@ class Scenario(BaseScenario):
         agents = self.good_agents(world)
         adversaries = self.adversaries(world)
         if shape:
-            rew -= 0.5 * min([np.sqrt(np.sum(np.square(a.state.p_pos - agent.state.p_pos))) for a in agents])
+            rew -= 0.1 * min([np.sqrt(np.sum(np.square(a.state.p_pos - agent.state.p_pos))) for a in agents])
             #rew -= 0.1 * min([np.sqrt(np.sum(np.square(a.state.p_pos - agent.state.p_pos))) for a in agents])
         if agent.collide:
             for ag in agents:
                 for adv in adversaries:
                     if self.is_collision(ag, adv):
-                        rew += 25
+                        rew += 35
         '''for adv in adversaries:
             rew -= max([round((angle_max - abs(self.visual_angle(adv,ag))) / angle_max) for ag in agents])'''
         return rew
