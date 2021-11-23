@@ -9,7 +9,7 @@ class Scenario(BaseScenario):
         # set any world properties first
         world.dim_c = 4
         #world.damping = 1
-        num_good_agents = 1
+        num_good_agents = 2
         num_adversaries = 3
         num_agents = num_adversaries + num_good_agents
         num_landmarks = 1
@@ -192,11 +192,11 @@ class Scenario(BaseScenario):
 
         for p in range(world.dim_p):
             x = abs(agent.state.p_pos[p])
-            rew -= 2 * bound(x)
+            rew -= 4 * bound(x)
 
         for food in world.food:
             if self.is_collision(agent, food):
-                rew += 25
+                rew += 100
         rew += 0.05 * min([np.sqrt(np.sum(np.square(food.state.p_pos - agent.state.p_pos))) for food in world.food])
         #rew += 0.05 * min([np.sqrt(np.sum(np.square(food.state.p_pos - agent.state.p_pos))) for food in world.food])
 
@@ -218,7 +218,7 @@ class Scenario(BaseScenario):
             for ag in agents:
                 for adv in adversaries:
                     if self.is_collision(ag, adv):
-                        rew += 35
+                        rew += 50
         '''for adv in adversaries:
             rew -= max([round((angle_max - abs(self.visual_angle(adv,ag))) / angle_max) for ag in agents])'''
         return rew

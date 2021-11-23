@@ -15,10 +15,10 @@ def parse_args():
     # environment
     parser.add_argument("--scenario_name", type=str, default="simple_world_comm_missile", help="name of the scenario script")
     parser.add_argument("--start_time", type=str, default=time_now, help="the time when start the game")
-    parser.add_argument("--per_episode_max_len", type=int, default=60, help="maximum episode length")
+    parser.add_argument("--per_episode_max_len", type=int, default=30, help="maximum episode length")
     parser.add_argument("--max_episode", type=int, default=150000, help="maximum episode length")
     parser.add_argument("--num-adversaries", type=int, default=1, help="number of adversaries")
-    parser.add_argument("--exp_name",type=str,default="1")
+    parser.add_argument("--exp_name",type=str,default="2")
 
     # core training parameters
     parser.add_argument("--device", default=device, help="torch device ")
@@ -34,20 +34,21 @@ def parse_args():
     parser.add_argument("--num_units_1", type=int, default=128, help="number of units in the mlp")
     parser.add_argument("--num_units_2", type=int, default=64, help="number of units in the mlp")
     parser.add_argument("--num_units_openai", type=int, default=64, help="number of units in the mlp")
-    parser.add_argument("--use_done",action="store_true",default=False)
+    parser.add_argument("--use_done",action="store_true",default=True)
 
     # checkpointing
     parser.add_argument("--fre4save_model", type=int, default=400, help="the number of the episode for saving the model")
     parser.add_argument("--start_save_model", type=int, default=400, help="the number of the episode for saving the model")
     parser.add_argument("--save_dir", type=str, default="./models-pytorch", \
             help="directory in which training state and model should be saved")
-    parser.add_argument("--old_model_name", type=str, default="models-pytorch/simple_world_comm_missile_21_1115_1/380000/", \
+    parser.add_argument("--old_model_name", type=str, default="models-pytorch/simple_world_comm_missile_21_1121_2/460000/", \
             help="directory in which training state and model are loaded")
 
     # evaluation
     parser.add_argument("--restore", action="store_true", default=False)
     parser.add_argument("--display", action="store_true", default=False)
     parser.add_argument("--benchmark", action="store_true", default=False)
+    parser.add_argument("--store-learning-curve",action="store_true", default=True)
     parser.add_argument("--benchmark-iters", type=int, default=100000, help="number of iterations run for benchmarking")
     parser.add_argument("--benchmark-dir", type=str, default="./benchmark_files/", \
             help="directory where benchmark data is saved")

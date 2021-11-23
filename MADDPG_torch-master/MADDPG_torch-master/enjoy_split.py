@@ -69,7 +69,8 @@ def enjoy(arglist):
         obs_n, rew_n, done_n, info_n = env.step(action_n)
 
         # update the flag
-        done = all(done_n)
+        done = any(done_n)
+        print(done_n)
         terminal = (episode_step >= arglist.per_episode_max_len)
 
         # reset the env

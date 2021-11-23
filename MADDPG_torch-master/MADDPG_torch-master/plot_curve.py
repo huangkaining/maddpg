@@ -4,7 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
-exp_name = "simple_world_comm_missile_21_1115_1"
+exp_name = "simple_world_comm_missile_21_1121_2"
 model_file_dir = os.path.join(r'./models-pytorch',exp_name,"data.txt")
 data_all = []
 with open(model_file_dir,'r') as f:

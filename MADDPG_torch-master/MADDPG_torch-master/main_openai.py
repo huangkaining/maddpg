@@ -239,7 +239,7 @@ def train(arglist):
             # update the obs_n
             game_step += 1
             obs_n = new_obs_n
-            done = all(done_n)
+            done = any(done_n)
             terminal = (episode_cnt >= arglist.per_episode_max_len-1)
             if done or terminal:
                 episode_step = 0
@@ -257,14 +257,15 @@ def train(arglist):
         if episode_gone > 1 and episode_gone % 100 == 0:
             print("=Training=episode:{} average reward:{}".format(episode_gone,\
                   np.mean(episode_rewards[-100:])), end="\n")
-            save_data = {}
-            save_data['episode_gone'] = episode_gone
-            save_data['episode_rewards'] = episode_rewards[-100:]
-            for i in range(len(agent_rewards)):
-                save_data[str(i)] = agent_rewards[i][-100:]
-            with open(learning_curve_file,'a') as f:
-                ss = json.dumps(save_data)
-                f.write(ss + "\n")
+            if arglist.store_learning_curve:
+                save_data = {}
+                save_data['episode_gone'] = episode_gone
+                save_data['episode_rewards'] = episode_rewards[-100:]
+                for i in range(len(agent_rewards)):
+                    save_data[str(i)] = agent_rewards[i][-100:]
+                with open(learning_curve_file,'a') as f:
+                    ss = json.dumps(save_data)
+                    f.write(ss + "\n")
 
 
 
